@@ -1,5 +1,12 @@
 let clickCounter = -1;
-let gold = 50;
+let gold = 1000;
+let health = 100;
+let level = 0;
+let weaponInventoryIndex = 0;
+let weaponInventory = [];
+let armorInventoryIndex = 0;
+let armorInventory = [];
+let damage = 0;
 
 const next = document.getElementById('next');
 const button1 = document.getElementById('button1');
@@ -7,6 +14,9 @@ const button2 = document.getElementById('button2');
 const button3 = document.getElementById('button3');
 const currentText = document.getElementById('currentText');
 const container = document.getElementById('container');
+const goldText = document.getElementById('goldText');
+const healthText = document.getElementById('healthText');
+const levelText = document.getElementById('levelText');
 
 const gameTexts = [
     'You stand at the threshold of Rune Hunter. The runes have chosen you. Not I. Their reasons are their own.',
@@ -17,9 +27,9 @@ const gameTexts = [
 
     'Listen well. Trust little. Step carefully. For once you enter… the hunt begins, and there is no turning back.',
 
-    'go to rune and start exploring!',
+    'Go to the trade market to buy weapon first\!',
 
-    'You must have atleast 500 gold to reconstruct the stronghold.',
+    'You must have atleast 500 gold and reach level 15 to reconstruct the stronghold.',
 
     'You have returned to the entrance.',
 
@@ -39,6 +49,84 @@ const backgroundImages = [
     "url('')"
 ]
 
+const weapons = [
+    {
+        name: 'Axe',
+        price: 30,
+        damage: 30
+    },
+    {
+        name: 'Hammer',
+        price: 70,
+        damage: 70
+    },
+    {
+        name: 'Sphear',
+        price: 120,
+        damage: 120
+    },
+    {
+        name: 'Machete',
+        price: 200,
+        damage: 200
+    },
+    {
+        name: 'Katana',
+        price: 300,
+        damage: 300
+    },
+    {
+        name: 'heavenly sword',
+        price: 100000,
+        damage: 100000
+    }
+]
+
+const armors = [
+    {
+        name: 'Leather Armor',
+        price: 30,
+        defense: 30
+    },
+    {
+        name: 'Chainmail Armor',
+        price: 70,
+        defense: 70
+    },
+    {
+        name: 'Plate Armor',
+        price: 120,
+        defense: 120
+    },
+    {
+        name: 'Scale Armor',
+        price: 200,
+        defense: 200
+    },
+    {
+        name: 'Dragon Armor',
+        price: 300,
+        defense: 300
+    },
+    {
+        name: 'heavenly armor',
+        price: 100000,
+        defense: 100000
+    }
+]
+
+// CHANGE BUTTON GRADIENT TO ORANGE OR GREY//
+const changeButtonGradient = (num)=> {
+    if(num == 0){
+        button3.style.border = "4px solid orange";
+        button3.style.backgroundImage = "linear-gradient(yellow, red)";
+    }
+    else{
+        button3.style.border = "4px solid gray";
+        button3.style.backgroundImage = "linear-gradient(darkgray, gray)";
+    }
+}
+
 // NEXT FUNCTION //
 const nextAction =()=> {
     clickCounter++;
@@ -50,8 +138,7 @@ const nextAction =()=> {
         currentText.innerText = gameTexts[clickCounter];
         document.body.style.backgroundImage = backgroundImages[1];
         next.style.display = 'none';
-        button3.style.border = "4px solid darkgray";
-        button3.style.backgroundImage = "linear-gradient(darkgray, gray)";
+        changeButtonGradient(1);
     }
     else{
         currentText.innerText = gameTexts[clickCounter];
@@ -62,9 +149,8 @@ const nextAction =()=> {
 const trade =()=> {
     if(clickCounter == 4){
         document.body.style.backgroundImage = backgroundImages[2];
+        changeButtonGradient(0);
         update(locations[1]);
-        button3.style.border = "4px solid orange";
-        button3.style.backgroundImage = "linear-gradient(yellow, red)";
         currentText.innerText = gameTexts[7];
     }
 }
@@ -72,12 +158,14 @@ const trade =()=> {
 const rune =()=> {
     if(clickCounter == 4){
         document.body.style.backgroundImage = backgroundImages[3];
+        changeButtonGradient(0);
+        update(locations[2]);
     }
 }
 
 const stronghold =()=> {
     if(clickCounter == 4){
-        if(gold >= 500){
+        if(gold >= 500 && level >= 15){
             document.body.style.backgroundImage = backgroundImages[4];
             container.style.backgroundImage = 'linear-gradient(brown, red)';
         }
@@ -92,8 +180,80 @@ button1.onclick = trade;
 button2.onclick = rune;
 button3.onclick = stronghold;
 
+const sellWeapon =()=> {
+    if(weaponInventory.length > 0 && weaponInventory[0].name != "Katana"){
+        gold += weaponInventory[0].price - 10;
+        currentText.innerText = `You have sold ${weaponInventory.shift().name}.`;
+        goldText.innerText = `${gold}`;
+    }
+    else{
+        currentText.innerText = `You cannot sell your only weapon.`;
+    }
+}
+
 const buyWeapon =()=> {
-    
+    if(weapons[weaponInventoryIndex].name == "heavenly sword"){
+        currentText.innerText = `You have bought all the weapons. You can sell them to get gold. Note: Katana is the last weapon so you cannot sell it.`;
+        button1.innerText = "Sell Weapon";
+        button1.onclick = sellWeapon;
+    }
+    else if(gold >= weapons[weaponInventoryIndex].price && weaponInventoryIndex < weapons.length - 1){
+        gold -= weapons[weaponInventoryIndex].price;
+        damage = weapons[weaponInventoryIndex].damage;
+        goldText.innerText = `${gold}`;
+        weaponInventory.push(weapons[weaponInventoryIndex]);
+        currentText.innerText = `You have bought ${weapons[weaponInventoryIndex].name} and your damage is now ${damage}.`;
+        weaponInventoryIndex++;
+    }
+    else if(gold < weapons[weaponInventoryIndex].price && weaponInventoryIndex < weapons.length - 1){
+        currentText.innerText = `You don't have enough gold to buy ${weapons[weaponInventoryIndex].name}.`;
+    }
+    else if(weaponInventoryIndex == weapons.length - 1 && weaponInventory[0].name != "heavenly sword"){
+        gold -= weapons[weaponInventoryIndex].price;
+        damage = weapons[weaponInventoryIndex].damage;
+        goldText.innerText = `${gold}`;
+        weaponInventory.push(weapons[weaponInventoryIndex]);
+        currentText.innerText = `You have bought ${weapons[weaponInventoryIndex].name} and your damage is now ${damage}. You have bought all the weapons. You can sell them to get gold. Note: Katana is the last weapon so you cannot sell it.`;
+    }
+}
+
+const sellHealth =()=> {
+    if(armorInventory.length > 0 && armorInventory[0].name != "Dragon Armor"){
+        gold += armorInventory[0].price - 10;
+        currentText.innerText = `You have sold ${armorInventory.shift().name}.`;
+        goldText.innerText = `${gold}`;
+    }
+    else{
+        currentText.innerText = `You cannot sell your only Armor Set.`;
+    }
+}
+
+const buyHealth =()=> {
+    if(armors[armorInventoryIndex].name == "heavenly armor"){
+        currentText.innerText = `You have bought all the armors. You can sell them to get gold. Note: Dragon Armor is the last armor set so you cannot sell it.`;
+        button2.innerText = "Sell Armor";
+        button2.onclick = sellHealth;
+    }
+    else if(gold >= armors[armorInventoryIndex].price && armorInventoryIndex < armors.length - 1){
+        gold -= armors[armorInventoryIndex].price;
+        health = armors[armorInventoryIndex].defense + 100;
+        healthText.innerText = `${health}`;
+        goldText.innerText = `${gold}`;
+        armorInventory.push(armors[armorInventoryIndex]);
+        currentText.innerText = `You have bought ${armors[armorInventoryIndex].name}.`;
+        armorInventoryIndex++;
+    }
+    else if(gold < armors[armorInventoryIndex].price && armorInventoryIndex < armors.length - 1){
+        currentText.innerText = `You don't have enough gold to buy ${armors[armorInventoryIndex].name}.`;
+    }
+    else if(armorInventoryIndex == armors.length - 1 && armorInventory[0].name != "heavenly armor"){
+        gold -= armors[armorInventoryIndex].price;
+        health = armors[armorInventoryIndex].defense + 100;
+        healthText.innerText = `${health}`;
+        goldText.innerText = `${gold}`;
+        armorInventory.push(armors[armorInventoryIndex]);
+        currentText.innerText = `You have bought ${armors[armorInventoryIndex].name}. You have bought all the armor sets. You can sell them to get gold. Note: dragon armor is the last weapon so you cannot sell it.`;
+    }
 }
 
 const fightMonster =()=> {
@@ -101,15 +261,12 @@ const fightMonster =()=> {
 }
 
 const exploreDungeon =()=> {
-    
-}
 
-const buyHealth =()=> {
-    
 }
 
 const returnToEntrance =()=> {
     document.body.style.backgroundImage = backgroundImages[1];
+    changeButtonGradient(1);
     currentText.innerText = gameTexts[6];
     update(locations[0]);
 }
@@ -126,7 +283,7 @@ const update =(location)=>{
 
 const locations = [
     {
-        buttonText: ["Trade", "Rune", "Stronghold"],
+        buttonText: ["Trade Market", "Rune", "Stronghold"],
         buttonActions: [trade, rune, stronghold],
     },
     {
