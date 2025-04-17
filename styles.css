@@ -54,16 +54,12 @@ body{
 }
 
 button{
-    width: 130px;
+    width: fit-content;
     height: 38px;
     margin-right: 10px;
     border: 4px solid orange;
     background-image: linear-gradient(yellow, red);
     font-size: 18px;
-}
-#button3{
-    border: 4px solid darkgray;
-    background-image: linear-gradient(darkgray, gray);
 }
 
 #button1{
