@@ -1,5 +1,5 @@
 let clickCounter = -1;
-let gold = 1000;
+let gold = 50;
 let health = 100;
 let level = 0;
 let weaponInventoryIndex = 0;
@@ -19,21 +19,32 @@ const healthText = document.getElementById('healthText');
 const levelText = document.getElementById('levelText');
 
 const gameTexts = [
+    //0
     'You stand at the threshold of Rune Hunter. The runes have chosen you. Not I. Their reasons are their own.',
-
+    //1
     'Beyond this veil lie dungeons untouched by time, riddled with secrets… and stained with the silence of those who failed.',
-
+    //2
     'No map shall guide you. No light shall follow. Only the runes may show you the way—if they deem you worthy.',
-
+    //3
     'Listen well. Trust little. Step carefully. For once you enter… the hunt begins, and there is no turning back.',
-
+    //4
     'Go to the trade market to buy weapon first\!',
-
+    //5
     'You must have atleast 500 gold and reach level 15 to reconstruct the stronghold.',
-
+    //6
     'You have returned to the entrance.',
-
+    //7
     'You have entered the trade market. Here you can buy weapons and armors.',
+    //8
+    'You have entered the rune. Here you can fight monsters and explore dungeons.',
+    //9
+    'You are at stage 2 rune.',
+    //10
+    'you are at stage 3 rune.',
+    //11
+    'You have returned to the rune entrance.',
+    //12
+    'You have returned to the stage 2 rune.'
 ]
 
 const backgroundImages = [
@@ -160,6 +171,7 @@ const rune =()=> {
         document.body.style.backgroundImage = backgroundImages[3];
         changeButtonGradient(0);
         update(locations[2]);
+        currentText.innerText = gameTexts[8];
     }
 }
 
@@ -260,9 +272,48 @@ const fightMonster =()=> {
 
 }
 
-const exploreDungeon =()=> {
+const exploreR2 =()=> {
+    if(level >= 3){
+        currentText.innerText = gameTexts[9];
+        update(locations[3]);
+    }
+    else{
+        currentText.innerText = `You need to be at least level 3 to explore this stage.`;
+    }
+}
+
+const fightSpirit =()=> {
 
 }
+
+const exploreR3 =()=> {
+    if(level >= 10){
+        currentText.innerText = gameTexts[10];
+        update(locations[4]);
+    }
+    else{
+        currentText.innerText = `You need to be at least level 10 to explore this stage.`;
+    }
+}
+
+const returnToRuneEntrance =()=> {
+    currentText.innerText = gameTexts[11];
+    update(locations[2]);
+}
+
+const fightGhoul =()=> {
+
+}
+
+const fightYeti =()=> {
+
+}
+
+const returnToStage2 =()=> {
+    currentText.innerText = gameTexts[12];
+    update(locations[3]);
+}
+
 
 const returnToEntrance =()=> {
     document.body.style.backgroundImage = backgroundImages[1];
@@ -291,7 +342,15 @@ const locations = [
         buttonActions: [buyWeapon, buyHealth, returnToEntrance]
     },
     {
-        buttonText: ["Fight Monster", "Explore Dungeon", "Return to Entrance"],
-        buttonActions: [fightMonster, exploreDungeon, returnToEntrance]
+        buttonText: ["Fight Monster", "Explore Stage 2 rune", "Return to Entrance"],
+        buttonActions: [fightMonster, exploreR2, returnToEntrance]
+    },
+    {
+        buttonText: ["Fight Spirit", "Explore Stage 3 rune", "Return to rune entrance"],
+        buttonActions: [fightSpirit, exploreR3, returnToRuneEntrance]
+    },
+    {
+        buttonText: ["Fight Ghoul", "fight Yeti", "Return to Stage 2 Dungeon"],
+        buttonActions: [fightGhoul, fightYeti, returnToStage2]
     }
 ]
