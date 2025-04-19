@@ -17,6 +17,7 @@ const container = document.getElementById('container');
 const goldText = document.getElementById('goldText');
 const healthText = document.getElementById('healthText');
 const levelText = document.getElementById('levelText');
+const display = document.getElementById('display');
 
 const gameTexts = [
     //0
@@ -48,12 +49,12 @@ const gameTexts = [
 ]
 
 const backgroundImages = [
-    // Yaksha 1st scene
-    "url('')",
-    // Yaksha 2nd scene
-    "url('')",
+    // Gate closed
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/133b7aa653f666e14342f498e6e2a334.jpg?raw=true')",
+    // Gate open
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/f68d273d50bf4e0838c5b09584877398.jpg?raw=true')",
     // Trade place scene
-    "url('')",
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/4ac91d110dcb267a15a14be26e287b0c.jpg?raw=true')",
     // Rune scene
     "url('')",
     // stronghold scene
@@ -141,25 +142,21 @@ const changeButtonGradient = (num)=> {
 // NEXT FUNCTION //
 const nextAction =()=> {
     clickCounter++;
-    if(clickCounter <= 3 && clickCounter % 2 != 0){
+    if(clickCounter <= 3){
         currentText.innerText = gameTexts[clickCounter];
-        document.body.style.backgroundImage = backgroundImages[0];
+        display.style.backgroundImage = backgroundImages[0];
     }
     else if(clickCounter == 4){
         currentText.innerText = gameTexts[clickCounter];
-        document.body.style.backgroundImage = backgroundImages[1];
+        display.style.backgroundImage = backgroundImages[1];
         next.style.display = 'none';
         changeButtonGradient(1);
-    }
-    else{
-        currentText.innerText = gameTexts[clickCounter];
-        document.body.style.backgroundImage = backgroundImages[1];
     }
 }
 
 const trade =()=> {
     if(clickCounter == 4){
-        document.body.style.backgroundImage = backgroundImages[2];
+        display.style.backgroundImage = backgroundImages[2];
         changeButtonGradient(0);
         update(locations[1]);
         currentText.innerText = gameTexts[7];
@@ -316,7 +313,7 @@ const returnToStage2 =()=> {
 
 
 const returnToEntrance =()=> {
-    document.body.style.backgroundImage = backgroundImages[1];
+    display.style.backgroundImage = backgroundImages[1];
     changeButtonGradient(1);
     currentText.innerText = gameTexts[6];
     update(locations[0]);

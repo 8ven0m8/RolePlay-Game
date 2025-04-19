@@ -1,17 +1,20 @@
 body{
-    background-image: url('');
     background-repeat: no-repeat;
     background-size: cover;
     text-align: right;
+    background-color: rgb(3,33,28);
 }
 
 #display{
-    width: fit-content;
-    max-width: 30%;
-    height: fit-content;
-    max-height: 80%;
-    margin: 40px auto 0px 60px;
-    background-image: url('');
+    float: left;
+    width: 40vw;
+    height: 85vh;
+    margin-left: 30px;
+    background-image: url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/133b7aa653f666e14342f498e6e2a334.jpg?raw=true');
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+    border: 5px solid rgb(101,123,80);
 }
 
 #container{
@@ -47,7 +50,7 @@ body{
     width: 97%;
     height: fit-content;
     border: 1px solid black;
-    background-color: rgb(13, 13, 38);
+    background-color: rgb(3,33,28);
     color: white; 
     text-align: left;
     font-size: 28px;
