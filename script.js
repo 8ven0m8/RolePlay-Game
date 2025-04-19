@@ -45,7 +45,13 @@ const gameTexts = [
     //11
     'You have returned to the rune entrance.',
     //12
-    'You have returned to the stage 2 rune.'
+    'You have returned to the stage 2 rune.',
+    //13
+    'You see a monster infront of you, he is charging at you.',
+    //14
+    'You died!',
+    //15
+    'You have defeated the monster!',
 ]
 
 const backgroundImages = [
@@ -58,7 +64,9 @@ const backgroundImages = [
     // Rune scene
     "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/6843a28538507cc2a31242cc391e8a4f.jpg?raw=true')",
     // stronghold scene
-    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/cff76d14949b372fb9221c6001193142.jpg?raw=true')"
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/cff76d14949b372fb9221c6001193142.jpg?raw=true')",
+    // stronghold closed gate
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/IMG_0772.JPG?raw=true')"
 ]
 
 const weapons = [
@@ -127,6 +135,39 @@ const armors = [
     }
 ]
 
+const enemy = [
+    {
+        name: 'Monster',
+        health: 100,
+        damage: 10,
+        award: 50
+    },
+    {
+        name: 'Spirit',
+        health: 500,
+        damage: 50,
+        award: 100
+    },
+    {
+        name: 'Ghoul',
+        health: 700,
+        damage: 100,
+        award: 200
+    },
+    {
+        name: 'Yeti',
+        health: 2000,
+        damage: 40,
+        award: 300
+    },
+    {
+        name: 'Dragon',
+        health: 5000,
+        damage: 100,
+        award: 1500
+    }
+]
+
 // CHANGE BUTTON GRADIENT TO ORANGE OR GREY//
 const changeButtonGradient = (num)=> {
     if(num == 0){
@@ -181,6 +222,7 @@ const stronghold =()=> {
         }
         else{
             currentText.innerText = gameTexts[5];
+            display.style.backgroundImage = backgroundImages[5];
         }
     }
 }
@@ -267,6 +309,24 @@ const buyHealth =()=> {
 }
 
 const fightMonster =()=> {
+    update(locations[5]);
+    currentText.innerText = gameTexts[13];
+    hit(enemy[0]);
+}
+
+const hit =(enemies)=> {
+    if(checkHealthLevels(enemies) == 0){
+        currentText.innerText = gameTexts[14];
+    }
+    else if(checkHealthLevels(enemies) == 1){
+    }
+}
+
+const block =()=> {
+
+}
+
+const run =()=> {
 
 }
 
@@ -329,6 +389,17 @@ const update =(location)=>{
     button3.onclick = location.buttonActions[2];
 }
 
+const checkHealthLevels =(enemies)=> {
+    if(health <= 0){
+        return 0;
+    }
+    else if(enemies.health <= 0){
+        return 1;
+    }
+    else if(health > 0 && enemies.health > 0){
+        return 2;
+    }
+}
 
 const locations = [
     {
@@ -350,5 +421,27 @@ const locations = [
     {
         buttonText: ["Fight Ghoul", "fight Yeti", "Return to Stage 2 Dungeon"],
         buttonActions: [fightGhoul, fightYeti, returnToStage2]
+    },
+    {
+        buttonText: ["Hit", "Block", "Run"],
+        buttonActions: [hit, block, run]
     }
 ]
+
+// THESE FUNCTIONS ARE FOR PRELOADING IMAGES //
+// Extract direct URLs
+const cacheImageList = backgroundImages.map(bg =>
+    bg.replace(/^url\(['"]?/, "").replace(/['"]?\)$/, "")
+);
+
+// Preload images
+const cache = [];
+cacheImageList.forEach(url => {
+    const img = new Image();
+    img.src = url;
+    cache.push(img);
+});
+
+
+// COMMIT UPDATES
+//V 1.1- Currently working on hit, block, run, fightMonster and checkHealthLevels functions and made a enemy array.
