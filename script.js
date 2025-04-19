@@ -1,7 +1,7 @@
 let clickCounter = -1;
-let gold = 50;
+let gold = 800;
 let health = 100;
-let level = 0;
+let level = 16;
 let weaponInventoryIndex = 0;
 let weaponInventory = [];
 let armorInventoryIndex = 0;
@@ -56,9 +56,9 @@ const backgroundImages = [
     // Trade place scene
     "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/4ac91d110dcb267a15a14be26e287b0c.jpg?raw=true')",
     // Rune scene
-    "url('')",
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/6843a28538507cc2a31242cc391e8a4f.jpg?raw=true')",
     // stronghold scene
-    "url('')"
+    "url('https://github.com/8ven0m8/RolePlay-Game/blob/main/images/cff76d14949b372fb9221c6001193142.jpg?raw=true')"
 ]
 
 const weapons = [
@@ -165,7 +165,7 @@ const trade =()=> {
 
 const rune =()=> {
     if(clickCounter == 4){
-        document.body.style.backgroundImage = backgroundImages[3];
+        display.style.backgroundImage = backgroundImages[3];
         changeButtonGradient(0);
         update(locations[2]);
         currentText.innerText = gameTexts[8];
@@ -175,7 +175,7 @@ const rune =()=> {
 const stronghold =()=> {
     if(clickCounter == 4){
         if(gold >= 500 && level >= 15){
-            document.body.style.backgroundImage = backgroundImages[4];
+            display.style.backgroundImage = backgroundImages[4];
             container.style.backgroundImage = 'linear-gradient(brown, red)';
         }
         else{
