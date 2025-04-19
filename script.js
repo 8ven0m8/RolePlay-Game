@@ -1,7 +1,7 @@
 let clickCounter = -1;
-let gold = 800;
+let gold = 50;
 let health = 100;
-let level = 16;
+let level = 0;
 let weaponInventoryIndex = 0;
 let weaponInventory = [];
 let armorInventoryIndex = 0;
@@ -175,6 +175,7 @@ const rune =()=> {
 const stronghold =()=> {
     if(clickCounter == 4){
         if(gold >= 500 && level >= 15){
+            changeButtonGradient(0)
             display.style.backgroundImage = backgroundImages[4];
             container.style.backgroundImage = 'linear-gradient(brown, red)';
         }
@@ -335,7 +336,7 @@ const locations = [
         buttonActions: [trade, rune, stronghold],
     },
     {
-        buttonText: ["Buy Weapon", "Buy Health", "Return to Entrance"],
+        buttonText: ["Buy Weapon", "Buy Armor", "Return to Entrance"],
         buttonActions: [buyWeapon, buyHealth, returnToEntrance]
     },
     {
