@@ -2,11 +2,20 @@ body{
     background-image: url('');
     background-repeat: no-repeat;
     background-size: cover;
-    text-align: center;
+    text-align: right;
+}
+
+#display{
+    width: fit-content;
+    max-width: 30%;
+    height: fit-content;
+    max-height: 80%;
+    margin: 40px auto 0px 60px;
+    background-image: url('');
 }
 
 #container{
-    margin: 50px auto;
+    margin: 50px 10px 0px auto;
     width: 50%;
     height: fit-content;
     border: 2px solid black;
