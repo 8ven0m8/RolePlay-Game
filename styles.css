@@ -96,3 +96,17 @@ button{
 .enemyStat{
     padding-right: 10px;
 }
+
+#levelUpDisplay{
+    display: none;
+    width: fit-content;
+    height: 10px;
+    border: 4px solid gray;
+}
+
+#lud1, #lud2, #lud3, #lud4, #lud5{
+    width: 100px;
+    float:left;
+    height: 10px;
+    background-image: linear-gradient(silver, gray);
+}

@@ -1,7 +1,7 @@
 let clickCounter = -1;
-let gold = 1000;
+let gold = 5000;
 let health = 100;
-let level = 0;
+let level = 15;
 let weaponInventoryIndex = 0;
 let weaponInventory = [];
 let armorInventoryIndex = 0;
@@ -21,6 +21,15 @@ const healthText = document.getElementById('healthText');
 const levelText = document.getElementById('levelText');
 const display = document.getElementById('display');
 const enemyStatDisplay = document.getElementById('enemyStatDisplay');
+
+// LEVEL UP BAR //
+const levelUpDisplayElement = document.getElementById('levelUpDisplay');
+const bar1 = document.getElementById('lud1');
+const bar2 = document.getElementById('lud2');
+const bar3 = document.getElementById('lud3');
+const bar4 = document.getElementById('lud4');
+const bar5 = document.getElementById('lud5');
+// END OF LEVEL UP BAR //
 
 const gameTexts = [
     //0
@@ -56,7 +65,28 @@ const gameTexts = [
     //15
     'You have defeated the monster!',
     //16
-    'You have respawned!'
+    'You have respawned!',
+    //17
+    'You see a spirit infront of you, he is charging at you.',
+    //18
+    'You see a ghoul infront of you, he is charging at you.',
+    //19
+    'You see a yeti infront of you, he is charging at you.'
+]
+
+const randomCombatText = [
+    "You have hit the enemy! It roars in agony and retaliates with a thunderous blow that sends you flying!",
+    "You slashed the enemy from the side! Blood sprayed as it screeched and grabbed your arm, sinking its fangs deep into your flesh!",
+    "You tackled the enemy and tore out its tongue with a primal scream! It clutched your head in rage and hurled you across the battlefield like a ragdoll!",
+    "You severed the enemy's arm with a blazing strike! It shrieked in pain, only for the arm to grow back in seconds—twisted, stronger, and pulsing with fury!",
+    "You cleaved through the enemy’s leg! It collapsed with a howl, dragging itself forward with burning eyes as dark energy began to reknit its limb!",
+    "You lopped off the enemy’s head in a single, clean stroke! Silence fell—until the headless body trembled, and the head grew back with a demonic grin.",
+    "You pierced the enemy’s heart with your blade! It gurgled and stumbled, only to rise again with black veins crawling across its skin, more furious than ever!",
+    "You sliced through its chest—ribs cracked, organs spilled—but it laughed maniacally as shadow tendrils pulled the mess back into place!",
+    "You shattered its leg bones with a powerful kick! It roared, using its claws to crawl toward you, vengeance glowing in its eyes!",
+    "You crushed its skull under your heel! But the fragments twitched... and reformed as its laughter echoed from the abyss!",
+    "You impaled its throat, severing the spine—but as it collapsed, its body began to twitch, eyes still locked on you, whispering curses through blood!",
+    "You drove your weapon through its eye! It wailed in torment, grabbed your face with bloodied claws, and slammed you into the ground with inhuman strength!"
 ]
 
 const backgroundImages = [
@@ -145,31 +175,36 @@ const enemy = [
         name: 'Monster',
         health: 100,
         damage: 10,
-        award: 50
+        award: 50,
+        levelup: 0.2
     },
     {
         name: 'Spirit',
         health: 500,
         damage: 50,
-        award: 100
+        award: 100,
+        levelup: 0.4
     },
     {
         name: 'Ghoul',
         health: 700,
         damage: 100,
-        award: 200
+        award: 200,
+        levelup: 0.6
     },
     {
         name: 'Yeti',
         health: 2000,
         damage: 40,
-        award: 300
+        award: 300,
+        levelup: 0.8
     },
     {
         name: 'Dragon',
         health: 5000,
         damage: 100,
-        award: 1500
+        award: 1500,
+        levelup: 1
     }
 ]
 
@@ -313,6 +348,46 @@ const buyHealth =()=> {
     }
 }
 
+const levelUpDisplay = ()=> {
+    levelUpDisplayElement.style.display = 'block';
+    let levelUpStat = level - Math.floor(level);
+    if(levelUpStat >= 0.1 && levelUpStat < 0.3){
+        bar1.style.backgroundImage = "linear-gradient(orange, red)";
+        bar2.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar3.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar4.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar5.style.backgroundImage = "linear-gradient(silver, gray)";
+    }
+    else if(levelUpStat >= 0.3 && levelUpStat < 0.5){
+        bar1.style.backgroundImage = "linear-gradient(orange, red)";
+        bar2.style.backgroundImage = "linear-gradient(orange, red)";
+        bar3.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar4.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar5.style.backgroundImage = "linear-gradient(silver, gray)";
+    }
+    else if(levelUpStat >= 0.5 && levelUpStat < 0.7){
+        bar1.style.backgroundImage = "linear-gradient(orange, red)";
+        bar2.style.backgroundImage = "linear-gradient(orange, red)";
+        bar3.style.backgroundImage = "linear-gradient(orange, red)";
+        bar4.style.backgroundImage = "linear-gradient(silver, gray)";
+        bar5.style.backgroundImage = "linear-gradient(silver, gray)";
+    }
+    else if(levelUpStat >= 0.7 && levelUpStat < 0.9){
+        bar1.style.backgroundImage = "linear-gradient(orange, red)";
+        bar2.style.backgroundImage = "linear-gradient(orange, red)";
+        bar3.style.backgroundImage = "linear-gradient(orange, red)";
+        bar4.style.backgroundImage = "linear-gradient(orange, red)";
+        bar5.style.backgroundImage = "linear-gradient(silver, gray)";
+    }
+    else{
+        bar1.style.backgroundImage = "linear-gradient(orange, red)";
+        bar2.style.backgroundImage = "linear-gradient(orange, red)";
+        bar3.style.backgroundImage = "linear-gradient(orange, red)";
+        bar4.style.backgroundImage = "linear-gradient(orange, red)";
+        bar5.style.backgroundImage = "linear-gradient(orange, red)";
+    }
+}
+
 const fightMonster =()=> {
     update(locations[5]);
     currentEnemyIndex = 0;
@@ -325,8 +400,9 @@ const hit =()=> {
     if(health > 0 && enemy[currentEnemyIndex].health > 0){
       enemy[currentEnemyIndex].health -= damage;
       health -= enemy[currentEnemyIndex].damage;
-      healthText.innerText = `${health}`;
+      healthText.innerText = `${Math.max(0, health)}`;
       displayEnemyStatBar(enemy[currentEnemyIndex]);
+      currentText.innerText = randomCombatText[Math.floor(Math.random() * randomCombatText.length)]; 
     }
     else if(health <= 1){
         currentText.innerText = gameTexts[14];
@@ -336,8 +412,9 @@ const hit =()=> {
     else if(enemy[currentEnemyIndex].health <= 1){
         currentText.innerText = gameTexts[15];
         enemyStatDisplay.style.display = 'none';
-        level++;
-        levelText.innerText = `${level}`;
+        level += enemy[currentEnemyIndex].levelup;
+        levelUpDisplay();
+        levelText.innerText = `${Math.floor(level)}`;
         gold += enemy[currentEnemyIndex].award;
         goldText.innerText = `${gold}`;
         update(locations[7]);
@@ -348,11 +425,46 @@ const hit =()=> {
 }
 
 const block =()=> {
-
+    let randomNum = Math.floor((Math.random() * 21) - 10);
+    if(health > 0 && enemy[currentEnemyIndex].health > 0){
+        health += randomNum;
+        healthText.innerText = `${Math.max(0, health)}`;
+        if(randomNum > 0){
+            currentText.innerText = `You have blocked the enemy's attack and gained ${randomNum} health.`;
+        }
+        else if(randomNum === 0){
+            currentText.innerText = `You have blocked the enemy's attack but did not gain any health.`;
+        }
+        else{
+            currentText.innerText = `You could not block the enemy's attack and lost ${Math.abs(randomNum)} health.`;
+        }
+    }
+    else if(health <= 1){
+        currentText.innerText = gameTexts[14];
+        enemyStatDisplay.style.display = 'none';
+        update(locations[6]);
+    }
 }
 
 const run =()=> {
-
+    let randomNum = Math.floor(Math.random() * 21);
+    if(health > 0 && enemy[currentEnemyIndex].health > 0){
+        if(health > 30){
+            currentText.innerText = `You have successfully run away from the monster!`;
+            enemyStatDisplay.style.display = 'none';
+            update(locations[2]);
+        }
+        else if(health <= 30 && health > 1){
+            health -= randomNum;
+            currentText.innerText = `You could not run away, the enemy grabbed you and slammed you against the wall! you lost ${randomNum} health!`;
+            healthText.innerText = `${Math.max(0, health)}`;
+        }
+    }
+    else if(health <= 1){
+        currentText.innerText = "You could not run away and died!";
+        enemyStatDisplay.style.display = 'none';
+        update(locations[6]);
+    }
 }
 
 const exploreR2 =()=> {
@@ -366,7 +478,11 @@ const exploreR2 =()=> {
 }
 
 const fightSpirit =()=> {
-
+    update(locations[5]);
+    currentEnemyIndex = 1;
+    currentText.innerText = gameTexts[17];
+    displayEnemyStatBar(enemy[1]);
+    enemyOriginalHealth = enemy[1].health;
 }
 
 const exploreR3 =()=> {
@@ -385,11 +501,19 @@ const returnToRuneEntrance =()=> {
 }
 
 const fightGhoul =()=> {
-
+    update(locations[5]);
+    currentEnemyIndex = 2;
+    currentText.innerText = gameTexts[18];
+    displayEnemyStatBar(enemy[2]);
+    enemyOriginalHealth = enemy[2].health;
 }
 
 const fightYeti =()=> {
-
+    update(locations[5]);
+    currentEnemyIndex = 3;
+    currentText.innerText = gameTexts[19];
+    displayEnemyStatBar(enemy[3]);
+    enemyOriginalHealth = enemy[3].health;
 }
 
 const returnToStage2 =()=> {
@@ -431,6 +555,7 @@ const reload =()=>{
     display.style.backgroundImage = backgroundImages[1];
     currentText.innerText = gameTexts[16];
     enemy[currentEnemyIndex].health = enemyOriginalHealth;
+    levelUpDisplayElement.style.display = 'none';
 }
 
 const displayEnemyStatBar = (enemies)=> {
@@ -505,3 +630,4 @@ cacheImageList.forEach(url => {
 
 // COMMIT UPDATES
 //V 1.1- Currently working on hit, block, run, fightMonster and checkHealthLevels functions and made a enemy array.
+//V 1.2- Rune is completed. Stronghold function left.
