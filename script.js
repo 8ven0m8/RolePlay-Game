@@ -1,12 +1,14 @@
 let clickCounter = -1;
-let gold = 50;
+let gold = 1000;
 let health = 100;
 let level = 0;
 let weaponInventoryIndex = 0;
 let weaponInventory = [];
 let armorInventoryIndex = 0;
 let armorInventory = [];
-let damage = 0;
+let damage = 5;
+let currentEnemyIndex = 0;
+let enemyOriginalHealth = 0;
 
 const next = document.getElementById('next');
 const button1 = document.getElementById('button1');
@@ -18,6 +20,7 @@ const goldText = document.getElementById('goldText');
 const healthText = document.getElementById('healthText');
 const levelText = document.getElementById('levelText');
 const display = document.getElementById('display');
+const enemyStatDisplay = document.getElementById('enemyStatDisplay');
 
 const gameTexts = [
     //0
@@ -52,6 +55,8 @@ const gameTexts = [
     'You died!',
     //15
     'You have defeated the monster!',
+    //16
+    'You have respawned!'
 ]
 
 const backgroundImages = [
@@ -310,15 +315,35 @@ const buyHealth =()=> {
 
 const fightMonster =()=> {
     update(locations[5]);
+    currentEnemyIndex = 0;
     currentText.innerText = gameTexts[13];
-    hit(enemy[0]);
+    displayEnemyStatBar(enemy[0]);
+    enemyOriginalHealth = enemy[0].health;
 }
 
-const hit =(enemies)=> {
-    if(checkHealthLevels(enemies) == 0){
-        currentText.innerText = gameTexts[14];
+const hit =()=> {
+    if(health > 0 && enemy[currentEnemyIndex].health > 0){
+      enemy[currentEnemyIndex].health -= damage;
+      health -= enemy[currentEnemyIndex].damage;
+      healthText.innerText = `${health}`;
+      displayEnemyStatBar(enemy[currentEnemyIndex]);
     }
-    else if(checkHealthLevels(enemies) == 1){
+    else if(health <= 1){
+        currentText.innerText = gameTexts[14];
+        enemyStatDisplay.style.display = 'none';
+        update(locations[6]);
+    }
+    else if(enemy[currentEnemyIndex].health <= 1){
+        currentText.innerText = gameTexts[15];
+        enemyStatDisplay.style.display = 'none';
+        level++;
+        levelText.innerText = `${level}`;
+        gold += enemy[currentEnemyIndex].award;
+        goldText.innerText = `${gold}`;
+        update(locations[7]);
+        armorInventory.length > 0? health = 100 + armorInventory[armorInventory.length - 1].defense: health = 100;
+        healthText.innerText = `${health}`;
+        enemy[currentEnemyIndex].health = enemyOriginalHealth;
     }
 }
 
@@ -389,42 +414,77 @@ const update =(location)=>{
     button3.onclick = location.buttonActions[2];
 }
 
-const checkHealthLevels =(enemies)=> {
-    if(health <= 0){
-        return 0;
-    }
-    else if(enemies.health <= 0){
-        return 1;
-    }
-    else if(health > 0 && enemies.health > 0){
-        return 2;
-    }
+const reload =()=>{
+    update(locations[0]);
+    gold = 50;
+    health = 100;
+    level = 0;
+    weaponInventoryIndex = 0;
+    weaponInventory = [];
+    armorInventoryIndex = 0;
+    armorInventory = [];
+    damage = 5;
+    currentEnemyIndex = 0;
+    goldText.innerText = `${gold}`;
+    healthText.innerText = `${health}`;
+    levelText.innerText = `${level}`;
+    display.style.backgroundImage = backgroundImages[1];
+    currentText.innerText = gameTexts[16];
+    enemy[currentEnemyIndex].health = enemyOriginalHealth;
+}
+
+const displayEnemyStatBar = (enemies)=> {
+    enemyStatDisplay.style.display = 'block';
+    let enemyHealth = Math.max(0, enemies.health);
+    enemyStatDisplay.innerHTML = `
+        <div id="enemyStatBar">
+            <span class="enemyStat"><b>Name: </b>${enemies.name}</span>
+            <span class="enemyStat"><b>Health: </b>${enemyHealth}</span>
+            <span class="enemyStat"><b>Damage: </b>${enemies.damage}</span>
+        </div>
+    `;
 }
 
 const locations = [
+    // 0
     {
         buttonText: ["Trade Market", "Rune", "Stronghold"],
         buttonActions: [trade, rune, stronghold],
     },
+    // 1
     {
         buttonText: ["Buy Weapon", "Buy Armor", "Return to Entrance"],
         buttonActions: [buyWeapon, buyHealth, returnToEntrance]
     },
+    // 2
     {
         buttonText: ["Fight Monster", "Explore Stage 2 rune", "Return to Entrance"],
         buttonActions: [fightMonster, exploreR2, returnToEntrance]
     },
+    // 3
     {
         buttonText: ["Fight Spirit", "Explore Stage 3 rune", "Return to rune entrance"],
         buttonActions: [fightSpirit, exploreR3, returnToRuneEntrance]
     },
+    // 4
     {
         buttonText: ["Fight Ghoul", "fight Yeti", "Return to Stage 2 Dungeon"],
         buttonActions: [fightGhoul, fightYeti, returnToStage2]
     },
+    // 5
     {
         buttonText: ["Hit", "Block", "Run"],
         buttonActions: [hit, block, run]
+    },
+    // 6
+    {
+        buttonText: ["Restart", "Restart", "Restart"],
+        buttonActions: [reload, reload, reload]
+    },
+    // 7
+    {
+        buttonText: ["Return", "Return", "Return"],
+        buttonActions: [returnToRuneEntrance, returnToRuneEntrance, returnToRuneEntrance]
     }
 ]
 
