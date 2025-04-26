@@ -1,7 +1,7 @@
 let clickCounter = -1;
-let gold = 5000;
+let gold = 50;
 let health = 100;
-let level = 15;
+let level = 0;
 let weaponInventoryIndex = 0;
 let weaponInventory = [];
 let armorInventoryIndex = 0;
@@ -71,7 +71,9 @@ const gameTexts = [
     //18
     'You see a ghoul infront of you, he is charging at you.',
     //19
-    'You see a yeti infront of you, he is charging at you.'
+    'You see a yeti infront of you, he is charging at you.',
+    //20
+    'You have entered the stronghold. You see a dragon infront of you, he is charging at you.'
 ]
 
 const randomCombatText = [
@@ -259,6 +261,11 @@ const stronghold =()=> {
             changeButtonGradient(0)
             display.style.backgroundImage = backgroundImages[4];
             container.style.backgroundImage = 'linear-gradient(brown, red)';
+            currentText.innerText = gameTexts[20];
+            update(locations[5]);
+            currentEnemyIndex = 4;
+            displayEnemyStatBar(enemy[4]);
+            enemyOriginalHealth = enemy[4].health;
         }
         else{
             currentText.innerText = gameTexts[5];
@@ -425,7 +432,7 @@ const hit =()=> {
 }
 
 const block =()=> {
-    let randomNum = Math.floor((Math.random() * 21) - 10);
+    let randomNum = Math.floor((Math.random() * 41) - 10);
     if(health > 0 && enemy[currentEnemyIndex].health > 0){
         health += randomNum;
         healthText.innerText = `${Math.max(0, health)}`;
@@ -440,6 +447,7 @@ const block =()=> {
         }
     }
     else if(health <= 1){
+        container.style.backgroundImage = 'linear-gradient(silver, gray)';
         currentText.innerText = gameTexts[14];
         enemyStatDisplay.style.display = 'none';
         update(locations[6]);
@@ -461,6 +469,8 @@ const run =()=> {
         }
     }
     else if(health <= 1){
+        container.style.backgroundImage = 'linear-gradient(silver, gray)';
+        changeButtonGradient(1);
         currentText.innerText = "You could not run away and died!";
         enemyStatDisplay.style.display = 'none';
         update(locations[6]);
@@ -497,6 +507,7 @@ const exploreR3 =()=> {
 
 const returnToRuneEntrance =()=> {
     currentText.innerText = gameTexts[11];
+    container.style.backgroundImage = 'linear-gradient(silver, gray)';
     update(locations[2]);
 }
 
@@ -525,6 +536,7 @@ const returnToStage2 =()=> {
 const returnToEntrance =()=> {
     display.style.backgroundImage = backgroundImages[1];
     changeButtonGradient(1);
+    container.style.backgroundImage = 'linear-gradient(silver, gray)';
     currentText.innerText = gameTexts[6];
     update(locations[0]);
 }
@@ -539,6 +551,8 @@ const update =(location)=>{
 }
 
 const reload =()=>{
+    changeButtonGradient(1);
+    container.style.backgroundImage = 'linear-gradient(silver, gray)';
     update(locations[0]);
     gold = 50;
     health = 100;
