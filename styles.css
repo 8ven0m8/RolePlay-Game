@@ -156,4 +156,15 @@ button{
         height: fit-content;
         font-size: 12px;
     }
+    #levelUpDisplay{
+        height: fit-content;
+        width: 90%;
+        border: 1px solid black;
+    }
+    #lud1, #lud2, #lud3, #lud4, #lud5{
+        width: 20%;
+        float:left;
+        height: 5px;
+        background-image: linear-gradient(silver, gray);
+    }
 }
