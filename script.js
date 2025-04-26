@@ -645,3 +645,4 @@ cacheImageList.forEach(url => {
 // COMMIT UPDATES
 //V 1.1- Currently working on hit, block, run, fightMonster and checkHealthLevels functions and made a enemy array.
 //V 1.2- Rune is completed. Stronghold function left.
+//V 1.3- Stronghold function is completed. Added level up bar and fixed some bugs.
